@@ -7,13 +7,14 @@ import (
 	"path/filepath"
 	"strings"
 
+	tm "github.com/buger/goterm"
 	"github.com/fatih/color"
 )
 
 // holds the basic windows commands for linux users
 // if any argument contains /? show help page
 
-var RegisterCommandsErr = func() error {
+func RegisterCommands() {
 	RegisteredCommands["cd"] = Command{
 		Execute: Cd,
 		Help: func(args ...string) {
@@ -21,6 +22,15 @@ var RegisterCommandsErr = func() error {
 		},
 		Description: "Changes the current working directory.",
 		Usage:       "COLOR [attr]",
+	}
+	RegisteredCommands["cls"] = Command{
+		Name:    "cls",
+		Execute: Cls,
+		Help: func(args ...string) {
+
+		},
+		Description: "Clear the terminal screen.",
+		Usage:       "CLS",
 	}
 	RegisteredCommands["color"] = Command{
 		Name:    "color",
@@ -31,17 +41,31 @@ var RegisterCommandsErr = func() error {
 		Description: "Changes the color of the terminal foreground or background.",
 		Usage:       "COLOR [attr]",
 	}
-	return nil
-}()
+	RegisteredCommands["exit"] = Command{
+		Execute: Exit,
+		Help: func(args ...string) {
+
+		},
+		Description: "Exits the shell.",
+		Usage:       "EXIT [/B] [Exitcode]",
+	}
+}
+
+func Cls(Args ...string) {
+	tm.Flush()
+	tm.Clear()
+	tm.MoveCursor(1, 1)
+}
 
 func Color(Args ...string) {
 	if len(Args) == 1 {
 		if len(Args[0]) >= 1 && len(Args[0]) <= 2 {
-			if strings.ContainsAny(Args[0], "0123456789ABCDEF") {
+			if strings.ContainsAny(strings.ToUpper(Args[0]), "0123456789ABCDEF") {
 				// changes the color of the terminal foreground and the color of the terminal background
 				BackgroundTurn := false
 				SetBackground := false
-				for _, v := range Args[0] {
+				fmt.Println([]byte(Args[0]))
+				for _, v := range strings.ToUpper(Args[0]) {
 					if BackgroundTurn {
 						SetBackground = true
 					}
@@ -141,6 +165,10 @@ func Color(Args ...string) {
 						} else {
 							color.Set(color.FgHiWhite)
 						}
+					} else {
+						fmt.Println("ALARM!")
+						CommandHelp("color")
+						return
 					}
 					BackgroundTurn = true
 				}
@@ -151,6 +179,9 @@ func Color(Args ...string) {
 				CommandHelp("color")
 			}
 		}
+	} else {
+		// set default
+		color.Set(color.FgWhite, color.BgBlack)
 	}
 }
 
@@ -176,4 +207,8 @@ func Cd(Args ...string) {
 	} else {
 		fmt.Println("The syntax for the file names, directory names or the drive designation is incorrect.")
 	}
+}
+
+func Exit(Args ...string) {
+	os.Exit(0)
 }

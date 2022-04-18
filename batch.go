@@ -44,13 +44,13 @@ func Interpret(Command string, Args ...string) {
 	// execute the command
 	LoweredCommand := strings.ToLower(Command)
 	ExecutedAnything := false
-	if LoweredCommand == "exit" {
+	// if registeredcommands has loweredcommand as key
+	// execute the command
+	if _, Exists := RegisteredCommands[LoweredCommand]; Exists {
+		RegisteredCommands[LoweredCommand].Execute(Args...)
 		ExecutedAnything = true
-		os.Exit(0)
-	} else if LoweredCommand == "cd" {
-		ExecutedAnything = true
-		Cd(Args...)
 	}
+
 	if ExecutedAnything {
 		ExecutedAnything = !ExecutedAnything
 		fmt.Println("\n")

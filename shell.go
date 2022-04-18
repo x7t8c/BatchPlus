@@ -8,6 +8,8 @@ import (
 	"os"
 	"runtime"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 type Command struct {
@@ -47,6 +49,7 @@ func GetReleaseHash() string {
 }
 
 func main() {
+	color.Set(color.FgWhite, color.BgBlack)
 	// remove first letter of the OS
 	OS := runtime.GOOS[1:]
 	OS = strings.ToUpper(string(runtime.GOOS[0])) + OS
@@ -60,6 +63,7 @@ func main() {
 		os.Exit(1)
 	}
 	reader := bufio.NewReader(os.Stdin)
+	RegisterCommands() // register all build-in commands
 
 	for {
 		fmt.Print(CurrentPath + ">")
@@ -67,6 +71,15 @@ func main() {
 		Input, _ := reader.ReadString('\n')
 		// convert CRLF to LF
 		Input = strings.Replace(Input, "\n", "", -1)
+		NewInput := ""
+		// iterate over the input and add it to the new input except 13
+		for i := 0; i < len(Input); i++ {
+			if Input[i] != 13 {
+				NewInput += string(Input[i])
+			}
+		}
+		// set input to new input
+		Input = NewInput
 		Command := strings.Split(Input, " ")[0]
 		// remove command as prefix from input
 		Args := strings.Split(Input, " ")

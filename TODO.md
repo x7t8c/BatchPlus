@@ -1,0 +1,5 @@
+- add automatic search for executables with the same name as the command
+- add jump marks (":" and "goto")
+- add environment variable setting and getting
+- add batch file execution
+- ~fix remove [13] in inputs~
