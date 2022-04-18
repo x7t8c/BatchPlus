@@ -1,0 +1,1 @@
+go build executor.go batch.go release.go cmd.go
