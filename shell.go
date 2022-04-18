@@ -20,6 +20,28 @@ type Command struct {
 	Usage       string               // "COLOR [attr]"
 }
 
+type JumpMark struct {
+	Name     string    // ":main"
+	Code     string    // "echo lol"
+	NextMark *JumpMark /*
+
+		:main
+		 :: Jumps directly to the next mark
+		:next
+
+	*/
+	NextCode string /*
+
+		:main
+		 :: Jumps to the next code
+		echo lol
+	*/
+}
+
+var PublicJumpMarks = make(map[string]JumpMark)
+
+// Starting Code -> Jump Mark -> Next Code / Next Jump Maek
+
 func CommandHelp(CommandName string) {
 	// get command
 	Command := RegisteredCommands[CommandName]

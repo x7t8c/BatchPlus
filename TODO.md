@@ -3,3 +3,5 @@
 - add environment variable setting and getting
 - add batch file execution
 - ~fix remove [13] in inputs~
+- fix cls -> not working
+- fix cd -> not working
